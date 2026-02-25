@@ -16,7 +16,7 @@ const MemoryStatsPage = lazy(() => import('@/pages/memory/stats'))
 const EmotionPage = lazy(() => import('@/pages/emotion'))
 const ContentPage = lazy(() => import('@/pages/content'))
 const RolesPage = lazy(() => import('@/pages/permission/roles'))
-const LogsPage = lazy(() => import('@/pages/permission/logs'))
+const LogsPage = lazy(() => import('@/pages/permission/operation-log'))
 const SystemConfigPage = lazy(() => import('@/pages/system/config'))
 const SystemMonitorPage = lazy(() => import('@/pages/system/monitor'))
 const SupportPage = lazy(() => import('@/pages/support'))
@@ -47,7 +47,7 @@ export const routes: RouteObject[] = [
       { path: 'emotion', element: <EmotionPage /> },
       { path: 'content', element: <ContentPage /> },
       { path: 'permission/roles', element: <RolesPage /> },
-      { path: 'permission/logs', element: <LogsPage /> },
+      { path: 'permission/operation-log', element: <LogsPage /> },
       { path: 'system/config', element: <SystemConfigPage /> },
       { path: 'system/monitor', element: <SystemMonitorPage /> },
       { path: 'support', element: <SupportPage /> },

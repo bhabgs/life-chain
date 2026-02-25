@@ -65,7 +65,7 @@ export default function Sidebar() {
         label: '权限安全',
         children: [
           { key: '/permission/roles', label: '角色管理' },
-          { key: '/permission/logs', label: '操作日志' },
+          { key: '/permission/operation-log', label: '操作日志' },
         ],
       },
       {
