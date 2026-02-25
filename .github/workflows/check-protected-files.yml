@@ -1,0 +1,131 @@
+name: 检查受保护文件修改
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  check-protected-files:
+    name: 检查受保护文件
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 获取变更文件列表
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            CLAUDE.md
+            .claude/**/*.md
+            docs/**/*.md
+            package.json
+            pnpm-workspace.yaml
+            tsconfig.base.json
+            .github/CODEOWNERS
+            .github/workflows/**
+            **/prisma/schema.prisma
+
+      - name: 检查受保护文件
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "::warning::⚠️ 检测到受保护文件被修改"
+          echo ""
+          echo "📋 以下受保护的文件被修改："
+          echo ""
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "  - $file"
+          done
+          echo ""
+          echo "⚠️ 请确保："
+          echo "  1. 已与相关负责人沟通"
+          echo "  2. 在 PR 描述中详细说明修改原因"
+          echo "  3. 已添加必要的审查人员（参考 CODEOWNERS）"
+          echo ""
+
+      - name: 添加PR评论
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const changedFiles = '${{ steps.changed-files.outputs.all_changed_files }}'.split(' ');
+
+            const comment = `## ⚠️ 受保护文件修改警告
+
+这个 PR 修改了受保护的文件，需要特别审查。
+
+### 📋 修改的受保护文件：
+
+${changedFiles.map(file => `- \`${file}\``).join('\n')}
+
+### ✅ 检查清单：
+
+- [ ] 已与相关负责人沟通
+- [ ] 在 PR 描述中详细说明了修改原因
+- [ ] 已添加必要的审查人员（参考 CODEOWNERS）
+- [ ] 修改已在团队中知晓
+- [ ] 相关文档已同步更新
+
+### 📚 相关文档：
+
+- [CODEOWNERS](.github/CODEOWNERS) - 查看需要哪些人审批
+- [CLAUDE.md](CLAUDE.md) - 项目开发规范
+
+---
+
+💡 **提示**: 这些文件受到保护是为了确保项目的稳定性和一致性。
+`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: 检查 PR 描述
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+
+            // 检查 PR 描述是否包含修改说明
+            const hasExplanation = body.length > 100 && (
+              body.includes('修改原因') ||
+              body.includes('为什么') ||
+              body.includes('变更说明') ||
+              body.toLowerCase().includes('reason') ||
+              body.toLowerCase().includes('why')
+            );
+
+            if (!hasExplanation) {
+              core.setFailed('❌ PR 描述过于简短或缺少修改说明。请在 PR 描述中详细说明修改受保护文件的原因。');
+            } else {
+              console.log('✅ PR 描述包含修改说明');
+            }
+
+      - name: 标记需要特别审查
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // 添加 "需要特别审查" 标签
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['需要特别审查', '受保护文件修改']
+            });
+
+      - name: 通过检查
+        if: steps.changed-files.outputs.any_changed == 'false'
+        run: |
+          echo "✅ 没有修改受保护的文件"

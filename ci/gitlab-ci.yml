@@ -1,0 +1,78 @@
+# GitLab CI 配置示例
+#
+# 使用方法：
+#   1. 复制此文件到项目根目录并重命名为 .gitlab-ci.yml
+#   2. 根据需要调整配置
+
+stages:
+  - check
+  - test
+  - build
+
+# 检查受保护文件
+check-protected-files:
+  stage: check
+  image: alpine/git:latest
+  script:
+    - apk add --no-cache bash
+    - bash scripts/check-protected-files.sh
+  only:
+    - merge_requests
+  tags:
+    - docker
+
+# 代码规范检查（示例）
+lint:
+  stage: check
+  image: node:18-alpine
+  script:
+    - npm ci
+    - npm run lint
+  only:
+    - merge_requests
+  tags:
+    - docker
+
+# 单元测试（示例）
+test:
+  stage: test
+  image: node:18-alpine
+  script:
+    - npm ci
+    - npm run test
+  coverage: '/Statements\s*:\s*(\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+  only:
+    - merge_requests
+    - main
+    - develop
+  tags:
+    - docker
+
+# 构建（示例）
+build:
+  stage: build
+  image: node:18-alpine
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+  tags:
+    - docker
+
+# 缓存配置
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .npm/

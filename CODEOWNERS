@@ -1,0 +1,102 @@
+# 代码所有者配置
+#
+# 这个文件定义了哪些文件需要特定人员审查才能合并
+# 格式: 文件路径  @审查者用户名
+#
+# 文档：https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ==========================================
+# 核心配置文件 - 需要项目负责人审批
+# ==========================================
+
+# Claude 配置文件（必须由项目负责人审批）
+CLAUDE.md                    @project-owner @tech-lead
+.claude/                     @project-owner @tech-lead
+
+# 项目核心文档（必须由项目负责人或技术负责人审批）
+docs/技术架构设计.md         @project-owner @tech-lead
+docs/页面功能目录.md         @project-owner @product-manager
+docs/多端策略分析.md         @project-owner @tech-lead
+
+# 根配置文件（必须由技术负责人审批）
+package.json                 @tech-lead
+pnpm-workspace.yaml          @tech-lead
+tsconfig.base.json           @tech-lead
+.gitignore                   @tech-lead
+.eslintrc.js                 @tech-lead
+.prettierrc                  @tech-lead
+
+# ==========================================
+# 数据库相关 - 需要后端负责人审批
+# ==========================================
+
+# Prisma Schema（数据库结构变更需要审批）
+**/prisma/schema.prisma      @backend-lead @dba
+**/migrations/               @backend-lead @dba
+
+# ==========================================
+# CI/CD 配置 - 需要 DevOps 审批
+# ==========================================
+
+.github/workflows/           @devops @tech-lead
+.github/CODEOWNERS           @project-owner
+Dockerfile                   @devops
+docker-compose.yml           @devops
+**/k8s/                      @devops
+**/kubernetes/               @devops
+
+# ==========================================
+# 安全相关 - 需要安全负责人审批
+# ==========================================
+
+# 认证授权相关代码
+**/auth/**                   @backend-lead @security
+**/authentication/**         @backend-lead @security
+**/authorization/**          @backend-lead @security
+
+# 密码加密、Token 相关
+**/crypto/**                 @backend-lead @security
+**/encryption/**             @backend-lead @security
+
+# ==========================================
+# 共享代码 - 需要多方审批
+# ==========================================
+
+# 共享包的变更需要前后端负责人共同审批
+packages/shared/             @frontend-lead @backend-lead
+
+# ==========================================
+# 前端代码审查
+# ==========================================
+
+# 移动端
+packages/mobile/             @frontend-lead @mobile-dev
+
+# 小程序
+packages/miniapp/            @frontend-lead @miniapp-dev
+
+# Web 管理后台
+packages/web-admin/          @frontend-lead @web-dev
+
+# ==========================================
+# 后端代码审查
+# ==========================================
+
+# 后端服务
+server/                      @backend-lead
+
+# 用户服务（涉及敏感信息）
+server/services/user-service/        @backend-lead @security
+
+# 认证服务（涉及安全）
+server/services/auth-service/        @backend-lead @security
+
+# AI 服务
+server/services/ai-service/          @backend-lead @ai-engineer
+
+# ==========================================
+# 默认规则
+# ==========================================
+
+# 所有其他文件至少需要一个团队成员审查
+*                            @team
