@@ -22,6 +22,15 @@ export interface IStageDistribution {
   percentage: number
 }
 
+export interface ISystemAlert {
+  id: string
+  level: 'info' | 'warning' | 'critical'
+  message: string
+  service: string
+  time: string
+  resolved: boolean
+}
+
 export const dashboardService = {
   getStats(): Promise<IApiResponse<IDashboardStats>> {
     return apiClient.get('/dashboard/stats')
@@ -41,5 +50,9 @@ export const dashboardService = {
 
   getStageDistribution(): Promise<IApiResponse<IStageDistribution[]>> {
     return apiClient.get('/dashboard/stage-distribution')
+  },
+
+  getAlerts(): Promise<IApiResponse<ISystemAlert[]>> {
+    return apiClient.get('/dashboard/alerts')
   },
 }

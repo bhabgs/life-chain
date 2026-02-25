@@ -5,6 +5,7 @@ import {
   mockMemoryTrend,
   mockInteraction,
   mockStageDistribution,
+  mockAlerts,
 } from '../data/dashboard-stats'
 
 const API = '/api/v1'
@@ -33,5 +34,10 @@ export const dashboardHandlers = [
   http.get(`${API}/dashboard/stage-distribution`, async () => {
     await delay(200)
     return HttpResponse.json({ code: 0, message: 'success', data: mockStageDistribution })
+  }),
+
+  http.get(`${API}/dashboard/alerts`, async () => {
+    await delay(300)
+    return HttpResponse.json({ code: 0, message: 'success', data: mockAlerts })
   }),
 ]

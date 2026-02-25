@@ -1,5 +1,17 @@
 import { http, HttpResponse, delay } from 'msw'
-import { mockUsers } from '../data/users'
+import {
+  mockUsers,
+  mockSegmentsData,
+  mockReviewUsers,
+  mockBehaviorStats,
+  mockUsageFrequencyDaily,
+  mockUsageFrequencyWeekly,
+  mockUsageFrequencyMonthly,
+  mockFeatureHeatmap,
+  mockChurnRiskUsers,
+  heatmapDayLabels,
+} from '../data/users'
+import type { TReviewStatus } from '../data/users'
 import { paginate, filterByKeyword } from '../utils/pagination'
 import type { TUserStatus, TUserRole } from '@lifechain/shared'
 
@@ -32,6 +44,67 @@ export const userHandlers = [
       code: 0,
       message: 'success',
       data: paginate(filtered, page, pageSize),
+    })
+  }),
+
+  // 用户分组统计（需在 :id 之前）
+  http.get(`${API}/users/segments`, async () => {
+    await delay(400)
+    return HttpResponse.json({
+      code: 0,
+      message: 'success',
+      data: mockSegmentsData,
+    })
+  }),
+
+  // 待审核 / 已审核列表（需在 :id 之前）
+  http.get(`${API}/users/review`, async ({ request }) => {
+    await delay(400)
+    const url = new URL(request.url)
+    const status = url.searchParams.get('status') as TReviewStatus | undefined
+    const page = Number(url.searchParams.get('page')) || 1
+    const pageSize = Number(url.searchParams.get('pageSize')) || 10
+
+    let filtered = [...mockReviewUsers]
+    if (status) {
+      filtered = filtered.filter((u) => u.reviewStatus === status)
+    }
+
+    return HttpResponse.json({
+      code: 0,
+      message: 'success',
+      data: paginate(filtered, page, pageSize),
+    })
+  }),
+
+  // 用户行为统计（需在 :id 之前）
+  http.get(`${API}/users/behavior-stats`, async ({ request }) => {
+    await delay(400)
+    const url = new URL(request.url)
+    const period = url.searchParams.get('period') || 'daily'
+
+    let usageFrequency
+    switch (period) {
+      case 'weekly':
+        usageFrequency = mockUsageFrequencyWeekly
+        break
+      case 'monthly':
+        usageFrequency = mockUsageFrequencyMonthly
+        break
+      default:
+        usageFrequency = mockUsageFrequencyDaily
+    }
+
+    return HttpResponse.json({
+      code: 0,
+      message: 'success',
+      data: {
+        stats: mockBehaviorStats,
+        usageFrequency,
+        featureHeatmap: mockFeatureHeatmap,
+        heatmapDayLabels,
+        churnRiskUsers: mockChurnRiskUsers,
+      },
     })
   }),
 
@@ -81,6 +154,32 @@ export const userHandlers = [
       return HttpResponse.json({ code: 1004, message: '用户不存在', data: null }, { status: 404 })
     }
     return HttpResponse.json({ code: 0, message: 'success', data: null })
+  }),
+
+  // 审核操作
+  http.post(`${API}/users/review/:id`, async ({ params, request }) => {
+    await delay(300)
+    const reviewUser = mockReviewUsers.find((u) => u.id === params.id)
+    if (!reviewUser) {
+      return HttpResponse.json(
+        { code: 1004, message: '审核记录不存在', data: null },
+        { status: 404 },
+      )
+    }
+    const body = (await request.json()) as { action: string; reason?: string }
+    const updated = {
+      ...reviewUser,
+      reviewStatus: body.action as TReviewStatus,
+      reviewedAt: new Date().toISOString(),
+      reviewReason: body.reason || '',
+      reviewer: '当前管理员',
+    }
+    // 更新本地 mock 数据
+    const index = mockReviewUsers.findIndex((u) => u.id === params.id)
+    if (index !== -1) {
+      mockReviewUsers[index] = updated
+    }
+    return HttpResponse.json({ code: 0, message: 'success', data: updated })
   }),
 
   // 批量删除

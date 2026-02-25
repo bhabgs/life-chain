@@ -9,6 +9,12 @@ import type {
 } from '@lifechain/shared'
 import apiClient from './api-client'
 
+export interface IReviewQueryParams {
+  status?: string
+  page?: number
+  pageSize?: number
+}
+
 export const userService = {
   getList(params: IUserQueryParams): Promise<IApiResponse<IPaginatedResponse<IUser>>> {
     return apiClient.get('/users', { params })
@@ -32,5 +38,21 @@ export const userService = {
 
   batchDelete(ids: string[]): Promise<IApiResponse<null>> {
     return apiClient.post('/users/batch-delete', { ids })
+  },
+
+  getSegments(): Promise<IApiResponse<unknown>> {
+    return apiClient.get('/users/segments')
+  },
+
+  getReviewList(params: IReviewQueryParams): Promise<IApiResponse<unknown>> {
+    return apiClient.get('/users/review', { params })
+  },
+
+  reviewUser(id: string, action: string, reason?: string): Promise<IApiResponse<unknown>> {
+    return apiClient.post(`/users/review/${id}`, { action, reason })
+  },
+
+  getBehaviorStats(period?: string): Promise<IApiResponse<unknown>> {
+    return apiClient.get('/users/behavior-stats', { params: { period } })
   },
 }

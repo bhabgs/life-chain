@@ -1,4 +1,4 @@
-import type { IDashboardStats, IChartData, IStageDistribution } from '@/services/dashboard.service'
+import type { IDashboardStats, IChartData, IStageDistribution, ISystemAlert } from '@/services/dashboard.service'
 
 export const mockDashboardStats: IDashboardStats = {
   totalUsers: 3256,
@@ -33,4 +33,12 @@ export const mockStageDistribution: IStageDistribution[] = [
   { stage: 'youth', label: '青年', count: 1302, percentage: 40.0 },
   { stage: 'middle_age', label: '中年', count: 815, percentage: 25.0 },
   { stage: 'old_age', label: '老年', count: 405, percentage: 12.5 },
+]
+
+export const mockAlerts: ISystemAlert[] = [
+  { id: 'alert-001', level: 'critical', message: '对话服务响应超时，P95 延迟达到 3.2s', service: '对话服务', time: '2026-02-25 09:15', resolved: false },
+  { id: 'alert-002', level: 'warning', message: 'Redis 缓存命中率下降至 72%', service: '缓存服务', time: '2026-02-25 08:42', resolved: false },
+  { id: 'alert-003', level: 'info', message: '记忆服务完成自动扩容（2→4 实例）', service: '记忆服务', time: '2026-02-25 08:30', resolved: true },
+  { id: 'alert-004', level: 'warning', message: 'MinIO 存储空间使用率达到 85%', service: '对象存储', time: '2026-02-25 07:50', resolved: false },
+  { id: 'alert-005', level: 'critical', message: '语音识别服务连接池耗尽', service: '语音服务', time: '2026-02-24 23:18', resolved: true },
 ]

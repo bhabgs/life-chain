@@ -88,4 +88,61 @@ export const systemService = {
   deleteRole(id: string): Promise<IApiResponse<null>> {
     return apiClient.delete(`/roles/${id}`)
   },
+
+  // ============ 安全审计 ============
+  getSecurityAuditEvents(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/security-audit')
+  },
+
+  // ============ 隐私与合规 ============
+  getPrivacyPolicies(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/privacy-policies')
+  },
+
+  getSensitiveDataStats(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/sensitive-data')
+  },
+
+  getDesensitizationRules(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/desensitization-rules')
+  },
+
+  updateDesensitizationRule(id: string, data: Record<string, unknown>): Promise<IApiResponse<null>> {
+    return apiClient.patch(`/system/desensitization-rules/${id}`, data)
+  },
+
+  getComplianceReports(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/compliance-reports')
+  },
+
+  // ============ AI模型管理 ============
+  getAIModels(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/ai-models')
+  },
+
+  // ============ 第三方服务 ============
+  getThirdPartyServices(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/third-party')
+  },
+
+  updateThirdPartyService(id: string, data: Record<string, unknown>): Promise<IApiResponse<null>> {
+    return apiClient.patch(`/system/third-party/${id}`, data)
+  },
+
+  // ============ 系统维护 ============
+  getBackups(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/backups')
+  },
+
+  createBackup(): Promise<IApiResponse<null>> {
+    return apiClient.post('/system/backups')
+  },
+
+  getLogStats(): Promise<IApiResponse<Record<string, unknown>>> {
+    return apiClient.get('/system/log-stats')
+  },
+
+  getPerformanceStats(): Promise<IApiResponse<unknown[]>> {
+    return apiClient.get('/system/performance')
+  },
 }

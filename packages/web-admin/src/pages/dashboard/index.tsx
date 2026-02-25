@@ -7,6 +7,7 @@ import UserGrowthChart from './components/UserGrowthChart'
 import MemoryTrendChart from './components/MemoryTrendChart'
 import InteractionChart from './components/InteractionChart'
 import StageDistribution from './components/StageDistribution'
+import RecentAlerts from './components/RecentAlerts'
 
 export default function DashboardPage() {
   const { data: statsRes, isLoading: statsLoading } = useQuery({
@@ -34,6 +35,11 @@ export default function DashboardPage() {
     queryFn: () => dashboardService.getStageDistribution(),
   })
 
+  const { data: alertsRes, isLoading: alertsLoading } = useQuery({
+    queryKey: ['dashboard', 'alerts'],
+    queryFn: () => dashboardService.getAlerts(),
+  })
+
   return (
     <PageContainer title="仪表盘">
       <StatCards stats={statsRes?.data} loading={statsLoading} />
@@ -55,6 +61,8 @@ export default function DashboardPage() {
           <StageDistribution data={stageRes?.data} loading={stageLoading} />
         </Col>
       </Row>
+
+      <RecentAlerts alerts={alertsRes?.data} loading={alertsLoading} />
     </PageContainer>
   )
 }
