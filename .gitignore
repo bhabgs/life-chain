@@ -98,8 +98,14 @@ logs/
 .DS_Store
 Thumbs.db
 
+# TypeScript build cache
+*.tsbuildinfo
+
 # Claude
 .claude/memory/*.md
 !.claude/memory/MEMORY.md
 tmpclaude-*-cwd
 nul
+
+# .omc
+.omc/
