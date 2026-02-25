@@ -160,16 +160,19 @@ pnpm test:coverage
 ## 📚 文档
 
 ### 核心文档
+
 - [技术架构设计](./docs/技术架构设计.md) - 完整的技术架构方案
 - [页面功能目录](./docs/页面功能目录.md) - 各端页面和功能结构
 - [多端策略分析](./docs/多端策略分析.md) - 多端开发策略
 
 ### 开发指南
+
 - [Claude 工作指南](./CLAUDE.md) - Claude Code 使用指南
 - [技能使用说明](./.claude/skills/README.md) - 自定义技能说明
 - [文件保护机制](./docs/文件保护机制说明.md) - 关键文件保护说明
 
 ### 平台配置
+
 - [多平台适配说明](./docs/多平台适配说明.md) - GitHub、GitLab、Gitee 等平台支持
 - [CI 配置说明](./ci/README.md) - 不同平台的 CI 配置
 - [GitHub 配置说明](./.github/README.md) - GitHub 特定配置
@@ -268,20 +271,20 @@ pnpm test:coverage
 
 ## 👥 团队
 
-- **项目负责人**: [@username](https://github.com/username)
-- **技术架构**: [@username](https://github.com/username)
-- **前端开发**: [@username](https://github.com/username)
-- **后端开发**: [@username](https://github.com/username)
-- **AI工程师**: [@username](https://github.com/username)
+- **项目负责人**: [@bhabgs](https://github.com/bhabgs)
+- **技术架构**: [@bhabgs](https://github.com/bhabgs)
+- **前端开发**: [@bhabgs](https://github.com/bhabgs)
+- **后端开发**: [@bhabgs](https://github.com/bhabgs)
+- **AI工程师**: [@bhabgs](https://github.com/bhabgs)
 
 ---
 
 ## 📧 联系方式
 
-- **官网**: https://lifechain.com
-- **邮箱**: contact@lifechain.com
-- **Issues**: https://github.com/your-org/life-chain/issues
-- **Discussion**: https://github.com/your-org/life-chain/discussions
+- **官网**:
+- **邮箱**:
+- **Issues**:
+- **Discussion**:
 
 ---
 
@@ -289,7 +292,7 @@ pnpm test:coverage
 
 如果这个项目对你有帮助，请给我们一个 Star ⭐
 
-[![Star History Chart](https://api.star-history.com/svg?repos=your-org/life-chain&type=Date)](https://star-history.com/#your-org/life-chain&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=bhabgs/life-chain&type=Date)](https://star-history.com/#bhabgs/life-chain&Date)
 
 ---
 
