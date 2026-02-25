@@ -1,0 +1,16 @@
+{
+  "name": "@lifechain/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "生命链共享代码包 - 类型定义、常量、工具函数",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

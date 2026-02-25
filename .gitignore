@@ -101,3 +101,5 @@ Thumbs.db
 # Claude
 .claude/memory/*.md
 !.claude/memory/MEMORY.md
+tmpclaude-*-cwd
+nul

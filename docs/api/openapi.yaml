@@ -1,0 +1,1318 @@
+openapi: 3.0.3
+info:
+  title: 生命链 API
+  description: 生命链 (LifeChain) - 跨世代数字人格陪伴系统后端接口文档
+  version: 1.0.0
+  contact:
+    name: 开发团队
+
+servers:
+  - url: /api/v1
+    description: API v1
+
+tags:
+  - name: Auth
+    description: 认证授权
+  - name: Users
+    description: 用户管理
+  - name: Memories
+    description: 记忆管理
+  - name: Personalities
+    description: 人格管理
+  - name: Dashboard
+    description: 仪表盘数据
+  - name: System
+    description: 系统管理
+  - name: Roles
+    description: 角色权限
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: "状态码：0=成功, 1xxx=客户端错误, 2xxx=服务端错误"
+        message:
+          type: string
+        data:
+          type: object
+
+    PaginatedResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {}
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalPages:
+          type: integer
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        username:
+          type: string
+        nickname:
+          type: string
+        avatar:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [male, female, other]
+        status:
+          type: string
+          enum: [active, suspended, deleted]
+        role:
+          type: string
+          enum: [user, admin, auditor]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    UserDetail:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            memoryCount:
+              type: integer
+            chatSessionCount:
+              type: integer
+            lastActiveAt:
+              type: string
+              format: date-time
+            personality:
+              type: object
+              nullable: true
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                relationship:
+                  type: string
+
+    Memory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [text, voice, image, video, event]
+        title:
+          type: string
+        content:
+          type: string
+        metadata:
+          type: object
+          properties:
+            location:
+              type: string
+            people:
+              type: array
+              items:
+                type: string
+            tags:
+              type: array
+              items:
+                type: string
+            weather:
+              type: string
+        emotion:
+          type: string
+        stage:
+          type: string
+          enum: [childhood, adolescence, youth, middle_age, old_age]
+        privacyLevel:
+          type: integer
+          enum: [1, 2, 3]
+          description: "1=仅自己, 2=继承人可见, 3=公开"
+        mediaUrls:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    MemoryStats:
+      type: object
+      properties:
+        total:
+          type: integer
+        byType:
+          type: object
+          properties:
+            text:
+              type: integer
+            voice:
+              type: integer
+            image:
+              type: integer
+            video:
+              type: integer
+            event:
+              type: integer
+        byStage:
+          type: object
+          properties:
+            childhood:
+              type: integer
+            adolescence:
+              type: integer
+            youth:
+              type: integer
+            middle_age:
+              type: integer
+            old_age:
+              type: integer
+        byMonth:
+          type: array
+          items:
+            type: object
+            properties:
+              month:
+                type: string
+              count:
+                type: integer
+
+    PersonalityTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        bigFive:
+          $ref: '#/components/schemas/BigFive'
+        customTraits:
+          $ref: '#/components/schemas/CustomTraits'
+        behaviorStyle:
+          $ref: '#/components/schemas/BehaviorStyle'
+        relationship:
+          type: string
+          enum: [friend, recorder, companion, mentor, family]
+        isDefault:
+          type: boolean
+        usageCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    BigFive:
+      type: object
+      properties:
+        openness:
+          type: number
+          minimum: 0
+          maximum: 1
+        conscientiousness:
+          type: number
+          minimum: 0
+          maximum: 1
+        extraversion:
+          type: number
+          minimum: 0
+          maximum: 1
+        agreeableness:
+          type: number
+          minimum: 0
+          maximum: 1
+        neuroticism:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    CustomTraits:
+      type: object
+      properties:
+        warmth:
+          type: number
+          minimum: 0
+          maximum: 1
+        rationality:
+          type: number
+          minimum: 0
+          maximum: 1
+        humorousness:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    BehaviorStyle:
+      type: object
+      properties:
+        replyLength:
+          type: string
+          enum: [short, medium, long]
+        emojiUsage:
+          type: string
+          enum: [none, moderate, frequent]
+        formalLevel:
+          type: string
+          enum: [casual, moderate, formal]
+        questionFrequency:
+          type: string
+          enum: [low, moderate, high]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalUsers:
+          type: integer
+        activeUsers:
+          type: integer
+        totalMemories:
+          type: integer
+        systemHealth:
+          type: number
+        userGrowthRate:
+          type: number
+        memoryGrowthRate:
+          type: number
+
+    ChartData:
+      type: object
+      properties:
+        labels:
+          type: array
+          items:
+            type: string
+        values:
+          type: array
+          items:
+            type: number
+
+    StageDistribution:
+      type: object
+      properties:
+        stage:
+          type: string
+        label:
+          type: string
+        count:
+          type: integer
+        percentage:
+          type: number
+
+    SystemConfig:
+      type: object
+      properties:
+        id:
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        group:
+          type: string
+        description:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+
+    ServiceStatus:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [healthy, degraded, down]
+        uptime:
+          type: string
+        cpu:
+          type: number
+        memory:
+          type: number
+        responseTime:
+          type: number
+
+    SystemMonitor:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceStatus'
+        alerts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              level:
+                type: string
+                enum: [info, warning, critical]
+              message:
+                type: string
+              service:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
+              resolved:
+                type: boolean
+
+    OperationLog:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        username:
+          type: string
+        action:
+          type: string
+        resource:
+          type: string
+        detail:
+          type: string
+        ip:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        userCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            username:
+              type: string
+            nickname:
+              type: string
+            avatar:
+              type: string
+            role:
+              type: string
+
+    RegisterRequest:
+      type: object
+      required: [email, password, username]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+        nickname:
+          type: string
+
+paths:
+  # ============ Auth ============
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: 用户登录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: 邮箱或密码错误
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: 用户注册
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: 注册成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/LoginResponse'
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: 刷新 Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: 刷新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          accessToken:
+                            type: string
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: 用户登出
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 登出成功
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: 获取当前用户信息
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+
+  # ============ Users ============
+  /users:
+    get:
+      tags: [Users]
+      summary: 用户列表
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: keyword
+          in: query
+          schema:
+            type: string
+          description: 搜索关键词（匹配用户名/昵称/邮箱）
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, suspended, deleted]
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [user, admin, auditor]
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/PaginatedResponse'
+                          - type: object
+                            properties:
+                              items:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/User'
+    post:
+      tags: [Users]
+      summary: 创建用户
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, username, password]
+              properties:
+                email:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                nickname:
+                  type: string
+                role:
+                  type: string
+                  enum: [user, admin, auditor]
+      responses:
+        '200':
+          description: 创建成功
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: 用户详情
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/UserDetail'
+    patch:
+      tags: [Users]
+      summary: 更新用户
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                avatar:
+                  type: string
+                status:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '200':
+          description: 更新成功
+    delete:
+      tags: [Users]
+      summary: 删除用户（软删除）
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 删除成功
+
+  /users/batch-delete:
+    post:
+      tags: [Users]
+      summary: 批量删除用户
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: 批量删除成功
+
+  # ============ Memories ============
+  /memories:
+    get:
+      tags: [Memories]
+      summary: 记忆列表
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: keyword
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [text, voice, image, video, event]
+        - name: stage
+          in: query
+          schema:
+            type: string
+            enum: [childhood, adolescence, youth, middle_age, old_age]
+        - name: userId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/PaginatedResponse'
+                          - type: object
+                            properties:
+                              items:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/Memory'
+
+  /memories/{id}:
+    get:
+      tags: [Memories]
+      summary: 记忆详情
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Memory'
+    delete:
+      tags: [Memories]
+      summary: 删除记忆
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 删除成功
+
+  /memories/stats:
+    get:
+      tags: [Memories]
+      summary: 记忆统计
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/MemoryStats'
+
+  # ============ Personalities ============
+  /personalities/templates:
+    get:
+      tags: [Personalities]
+      summary: 人格模板列表
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/PaginatedResponse'
+                          - type: object
+                            properties:
+                              items:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/PersonalityTemplate'
+    post:
+      tags: [Personalities]
+      summary: 创建人格模板
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, description, bigFive, customTraits, behaviorStyle, relationship]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                bigFive:
+                  $ref: '#/components/schemas/BigFive'
+                customTraits:
+                  $ref: '#/components/schemas/CustomTraits'
+                behaviorStyle:
+                  $ref: '#/components/schemas/BehaviorStyle'
+                relationship:
+                  type: string
+                isDefault:
+                  type: boolean
+      responses:
+        '200':
+          description: 创建成功
+
+  /personalities/templates/{id}:
+    get:
+      tags: [Personalities]
+      summary: 人格模板详情
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+    patch:
+      tags: [Personalities]
+      summary: 更新人格模板
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                bigFive:
+                  $ref: '#/components/schemas/BigFive'
+                customTraits:
+                  $ref: '#/components/schemas/CustomTraits'
+                behaviorStyle:
+                  $ref: '#/components/schemas/BehaviorStyle'
+                relationship:
+                  type: string
+                isDefault:
+                  type: boolean
+      responses:
+        '200':
+          description: 更新成功
+    delete:
+      tags: [Personalities]
+      summary: 删除人格模板
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 删除成功
+
+  # ============ Dashboard ============
+  /dashboard/stats:
+    get:
+      tags: [Dashboard]
+      summary: 仪表盘统计数据
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DashboardStats'
+
+  /dashboard/user-growth:
+    get:
+      tags: [Dashboard]
+      summary: 用户增长趋势
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [7d, 30d, 90d, 12m]
+            default: 12m
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChartData'
+
+  /dashboard/memory-trend:
+    get:
+      tags: [Dashboard]
+      summary: 记忆采集趋势
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChartData'
+
+  /dashboard/interaction:
+    get:
+      tags: [Dashboard]
+      summary: 互动频次数据
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChartData'
+
+  /dashboard/stage-distribution:
+    get:
+      tags: [Dashboard]
+      summary: 人生阶段分布
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StageDistribution'
+
+  # ============ System ============
+  /system/config:
+    get:
+      tags: [System]
+      summary: 获取系统配置
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SystemConfig'
+
+  /system/config/{id}:
+    patch:
+      tags: [System]
+      summary: 更新系统配置
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [value]
+              properties:
+                value:
+                  type: string
+      responses:
+        '200':
+          description: 更新成功
+
+  /system/monitor:
+    get:
+      tags: [System]
+      summary: 系统监控数据
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SystemMonitor'
+
+  /system/logs:
+    get:
+      tags: [System]
+      summary: 操作日志列表
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/PaginatedResponse'
+                          - type: object
+                            properties:
+                              items:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/OperationLog'
+
+  # ============ Roles ============
+  /roles:
+    get:
+      tags: [Roles]
+      summary: 角色列表
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Role'
+    post:
+      tags: [Roles]
+      summary: 创建角色
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, description, permissions]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                permissions:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: 创建成功
+
+  /roles/{id}:
+    patch:
+      tags: [Roles]
+      summary: 更新角色
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                permissions:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: 更新成功
+    delete:
+      tags: [Roles]
+      summary: 删除角色
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 删除成功

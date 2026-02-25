@@ -1,0 +1,40 @@
+{
+  "name": "lifechain",
+  "version": "0.1.0",
+  "private": true,
+  "description": "生命链 - 跨世代数字人格陪伴系统",
+  "scripts": {
+    "dev:admin": "pnpm --filter @lifechain/web-admin dev",
+    "build:admin": "pnpm --filter @lifechain/web-admin build",
+    "build:shared": "pnpm --filter @lifechain/shared build",
+    "build:all": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "prettier --write \"packages/*/src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"packages/*/src/**/*.{ts,tsx}\"",
+    "clean": "pnpm -r exec rm -rf dist node_modules",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^9.0.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "msw": {
+    "workerDirectory": [
+      "packages/web-admin/public"
+    ]
+  }
+}
