@@ -1,0 +1,22 @@
+.tag-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+
+  &__tag {
+    padding: 12rpx 28rpx;
+    border: 2rpx solid #E8E8E8;
+    border-radius: 999rpx;
+    background: #fff;
+
+    &--active {
+      background: #FF8A5B;
+      border-color: #FF8A5B;
+    }
+  }
+
+  &__label {
+    font-size: 26rpx;
+    color: #262626;
+  }
+}

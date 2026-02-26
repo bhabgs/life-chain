@@ -1,0 +1,16 @@
+.page-timeline {
+  min-height: 100vh;
+  background: #F5F5F5;
+
+  &__body {
+    padding: 32rpx 24rpx;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 80rpx 0;
+    color: #8C8C8C;
+    font-size: 28rpx;
+  }
+}

@@ -1,0 +1,69 @@
+.timeline-item {
+  padding-left: 40rpx;
+  position: relative;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 16rpx 0;
+  }
+
+  &__dot {
+    width: 20rpx;
+    height: 20rpx;
+    border-radius: 50%;
+    background: #FF8A5B;
+    position: absolute;
+    left: 0;
+    top: 24rpx;
+  }
+
+  &__month {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #262626;
+    margin-right: 16rpx;
+  }
+
+  &__count {
+    font-size: 24rpx;
+    color: #8C8C8C;
+  }
+
+  &__line {
+    border-left: 2rpx solid #E8E8E8;
+    margin-left: 10rpx;
+    padding-left: 30rpx;
+    padding-bottom: 24rpx;
+  }
+
+  &__event {
+    display: flex;
+    align-items: flex-start;
+    padding: 16rpx 0;
+  }
+
+  &__star {
+    color: #FAAD14;
+    font-size: 28rpx;
+    margin-right: 12rpx;
+    flex-shrink: 0;
+  }
+
+  &__event-body {
+    flex: 1;
+  }
+
+  &__event-title {
+    font-size: 28rpx;
+    color: #262626;
+    display: block;
+  }
+
+  &__event-date {
+    font-size: 24rpx;
+    color: #8C8C8C;
+    margin-top: 4rpx;
+    display: block;
+  }
+}

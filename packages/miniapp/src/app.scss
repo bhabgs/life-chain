@@ -1,0 +1,54 @@
+// ============ 主题变量 ============
+
+// 颜色
+$color-primary: #FF8A5B;
+$color-secondary: #5BA3FF;
+$color-success: #52C41A;
+$color-warning: #FAAD14;
+$color-error: #F5222D;
+
+// 文字颜色
+$color-text-primary: #262626;
+$color-text-secondary: #8C8C8C;
+$color-text-disabled: #BFBFBF;
+
+// 背景颜色
+$color-bg-default: #FFFFFF;
+$color-bg-secondary: #FAFAFA;
+$color-bg-page: #F5F5F5;
+
+// 间距 (rpx)
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 32rpx;
+$spacing-lg: 48rpx;
+$spacing-xl: 64rpx;
+$spacing-xxl: 96rpx;
+
+// 字号 (rpx)
+$font-size-xs: 24rpx;
+$font-size-sm: 28rpx;
+$font-size-md: 32rpx;
+$font-size-lg: 36rpx;
+$font-size-xl: 40rpx;
+$font-size-xxl: 48rpx;
+
+// 圆角
+$border-radius-sm: 8rpx;
+$border-radius-md: 16rpx;
+$border-radius-lg: 24rpx;
+$border-radius-full: 999rpx;
+
+// 阴影
+$shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+
+// ============ 全局样式 ============
+
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  background-color: $color-bg-page;
+  line-height: 1.5;
+}

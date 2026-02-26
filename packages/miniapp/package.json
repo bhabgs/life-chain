@@ -1,0 +1,49 @@
+{
+  "name": "@lifechain/miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "生命链小程序 - Taro",
+  "templateInfo": {
+    "name": "default",
+    "typescript": true,
+    "css": "sass"
+  },
+  "scripts": {
+    "build:weapp": "taro build --type weapp",
+    "dev:weapp": "taro build --type weapp --watch",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix"
+  },
+  "browserslist": [
+    "last 3 versions",
+    "Android >= 4.1",
+    "ios >= 8"
+  ],
+  "dependencies": {
+    "@lifechain/shared": "workspace:*",
+    "@nutui/nutui-react-taro": "^2.6.0",
+    "@nutui/icons-react-taro": "^1.0.0",
+    "@tarojs/components": "3.6.35",
+    "@tarojs/helper": "3.6.35",
+    "@tarojs/plugin-framework-react": "3.6.35",
+    "@tarojs/plugin-platform-weapp": "3.6.35",
+    "@tarojs/react": "3.6.35",
+    "@tarojs/runtime": "3.6.35",
+    "@tarojs/shared": "3.6.35",
+    "@tarojs/taro": "3.6.35",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.24.0",
+    "@tarojs/cli": "3.6.35",
+    "@tarojs/webpack5-runner": "3.6.35",
+    "@types/react": "^18.2.0",
+    "babel-preset-taro": "3.6.35",
+    "postcss": "^8.4.35",
+    "sass": "^1.70.0",
+    "typescript": "^5.4.0",
+    "webpack": "5.91.0"
+  }
+}

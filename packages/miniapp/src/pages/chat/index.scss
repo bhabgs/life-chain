@@ -1,0 +1,59 @@
+.page-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #F5F5F5;
+
+  &__messages {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &__messages-inner {
+    padding: 24rpx 0;
+    min-height: 100%;
+  }
+
+  &__typing {
+    padding: 16rpx 48rpx;
+  }
+
+  &__typing-text {
+    font-size: 24rpx;
+    color: #8C8C8C;
+  }
+
+  &__input-bar {
+    display: flex;
+    align-items: center;
+    padding: 16rpx 24rpx;
+    background: #fff;
+    border-top: 1rpx solid #E8E8E8;
+    padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  }
+
+  &__input {
+    flex: 1;
+    height: 72rpx;
+    background: #F5F5F5;
+    border-radius: 999rpx;
+    padding: 0 28rpx;
+    font-size: 28rpx;
+  }
+
+  &__send {
+    margin-left: 16rpx;
+    padding: 16rpx 28rpx;
+    border-radius: 999rpx;
+    background: #E8E8E8;
+
+    &--active {
+      background: #FF8A5B;
+    }
+  }
+
+  &__send-text {
+    font-size: 28rpx;
+    color: #fff;
+  }
+}

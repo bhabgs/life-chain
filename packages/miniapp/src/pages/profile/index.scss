@@ -1,0 +1,94 @@
+.page-profile {
+  padding-bottom: 120rpx;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 48rpx 32rpx;
+    background: linear-gradient(135deg, #FF8A5B 0%, #FFAB87 100%);
+  }
+
+  &__avatar {
+    width: 128rpx;
+    height: 128rpx;
+    border-radius: 50%;
+    border: 4rpx solid #fff;
+    margin-right: 24rpx;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__name {
+    font-size: 38rpx;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    margin-bottom: 8rpx;
+  }
+
+  &__bio {
+    font-size: 26rpx;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  &__menu {
+    background: #fff;
+    margin: 24rpx;
+    border-radius: 16rpx;
+    overflow: hidden;
+  }
+
+  &__menu-item {
+    display: flex;
+    align-items: center;
+    padding: 28rpx 32rpx;
+    border-bottom: 1rpx solid #F5F5F5;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__menu-icon {
+    font-size: 40rpx;
+    margin-right: 20rpx;
+  }
+
+  &__menu-label {
+    flex: 1;
+    font-size: 30rpx;
+    color: #262626;
+  }
+
+  &__menu-arrow {
+    font-size: 32rpx;
+    color: #BFBFBF;
+  }
+
+  &__logout {
+    margin: 48rpx 24rpx;
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 28rpx;
+    text-align: center;
+  }
+
+  &__logout-text {
+    font-size: 30rpx;
+    color: #F5222D;
+  }
+
+  &__login-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 200rpx 0;
+  }
+
+  &__login-text {
+    font-size: 32rpx;
+    color: #FF8A5B;
+  }
+}

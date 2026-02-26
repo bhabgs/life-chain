@@ -1,0 +1,40 @@
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #FF8A5B;
+
+  &__left {
+    width: 120rpx;
+  }
+
+  &__back {
+    padding: 8rpx 16rpx;
+  }
+
+  &__back-icon {
+    font-size: 48rpx;
+    color: #fff;
+    line-height: 1;
+  }
+
+  &__title {
+    font-size: 34rpx;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    flex: 1;
+  }
+
+  &__right {
+    width: 120rpx;
+    text-align: right;
+  }
+
+  &__right-text {
+    font-size: 28rpx;
+    color: #fff;
+  }
+}

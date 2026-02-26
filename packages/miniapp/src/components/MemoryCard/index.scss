@@ -1,0 +1,69 @@
+.memory-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+
+  &__cover {
+    width: 100%;
+    height: 300rpx;
+  }
+
+  &__body {
+    padding: 24rpx;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12rpx;
+  }
+
+  &__type {
+    font-size: 24rpx;
+    color: #FF8A5B;
+    background: rgba(255, 138, 91, 0.1);
+    padding: 4rpx 16rpx;
+    border-radius: 8rpx;
+  }
+
+  &__time {
+    font-size: 24rpx;
+    color: #8C8C8C;
+  }
+
+  &__title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 8rpx;
+    display: block;
+  }
+
+  &__content {
+    font-size: 28rpx;
+    color: #8C8C8C;
+    line-height: 1.6;
+    display: block;
+  }
+
+  &__emotion {
+    display: flex;
+    align-items: center;
+    margin-top: 16rpx;
+  }
+
+  &__emotion-dot {
+    width: 16rpx;
+    height: 16rpx;
+    border-radius: 50%;
+    margin-right: 8rpx;
+  }
+
+  &__emotion-label {
+    font-size: 24rpx;
+    color: #8C8C8C;
+  }
+}

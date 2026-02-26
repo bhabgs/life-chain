@@ -1,0 +1,72 @@
+.page-index {
+  padding: 24rpx;
+  padding-bottom: 120rpx;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24rpx 0 32rpx;
+  }
+
+  &__logo {
+    font-size: 44rpx;
+    font-weight: 700;
+    color: #FF8A5B;
+  }
+
+  &__date {
+    font-size: 28rpx;
+    color: #8C8C8C;
+  }
+
+  &__section {
+    margin-bottom: 32rpx;
+  }
+
+  &__section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16rpx;
+  }
+
+  &__section-title {
+    font-size: 34rpx;
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 16rpx;
+  }
+
+  &__section-more {
+    font-size: 26rpx;
+    color: #FF8A5B;
+  }
+
+  &__chat-card {
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 28rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  }
+
+  &__chat-role {
+    font-size: 24rpx;
+    color: #FF8A5B;
+    margin-bottom: 8rpx;
+    display: block;
+  }
+
+  &__chat-content {
+    font-size: 28rpx;
+    color: #262626;
+    line-height: 1.6;
+  }
+
+  &__chat-empty {
+    font-size: 28rpx;
+    color: #8C8C8C;
+    text-align: center;
+    padding: 16rpx 0;
+  }
+}

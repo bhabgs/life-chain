@@ -1,0 +1,107 @@
+.page-invite {
+  min-height: 100vh;
+  background: #F5F5F5;
+
+  &__body {
+    padding: 32rpx 24rpx;
+  }
+
+  &__card {
+    background: linear-gradient(135deg, #FF8A5B 0%, #FFAB87 100%);
+    border-radius: 24rpx;
+    padding: 48rpx 36rpx;
+    text-align: center;
+    margin-bottom: 32rpx;
+  }
+
+  &__card-emoji {
+    font-size: 80rpx;
+    display: block;
+    margin-bottom: 20rpx;
+  }
+
+  &__card-title {
+    font-size: 38rpx;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    margin-bottom: 16rpx;
+  }
+
+  &__card-desc {
+    font-size: 28rpx;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    display: block;
+    margin-bottom: 32rpx;
+  }
+
+  &__qr-placeholder {
+    width: 240rpx;
+    height: 240rpx;
+    background: #fff;
+    border-radius: 16rpx;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__qr-text {
+    font-size: 28rpx;
+    color: #8C8C8C;
+  }
+
+  &__qr-sub {
+    font-size: 20rpx;
+    color: #BFBFBF;
+    margin-top: 8rpx;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 16rpx;
+    margin-bottom: 32rpx;
+  }
+
+  &__action {
+    flex: 1;
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 28rpx 16rpx;
+    text-align: center;
+  }
+
+  &__action-icon {
+    font-size: 48rpx;
+    display: block;
+    margin-bottom: 12rpx;
+  }
+
+  &__action-label {
+    font-size: 26rpx;
+    color: #262626;
+  }
+
+  &__tips {
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 28rpx;
+  }
+
+  &__tips-title {
+    font-size: 30rpx;
+    font-weight: 500;
+    color: #262626;
+    margin-bottom: 16rpx;
+    display: block;
+  }
+
+  &__tips-item {
+    font-size: 26rpx;
+    color: #8C8C8C;
+    line-height: 2;
+    display: block;
+  }
+}

@@ -6,6 +6,8 @@
   "scripts": {
     "dev:admin": "pnpm --filter @lifechain/web-admin dev",
     "build:admin": "pnpm --filter @lifechain/web-admin build",
+    "dev:miniapp": "pnpm --filter @lifechain/miniapp dev:weapp",
+    "build:miniapp": "pnpm --filter @lifechain/miniapp build:weapp",
     "build:shared": "pnpm --filter @lifechain/shared build",
     "build:all": "pnpm -r build",
     "lint": "pnpm -r lint",

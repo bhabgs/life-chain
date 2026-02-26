@@ -1,0 +1,143 @@
+.page-summary {
+  min-height: 100vh;
+  background: #F5F5F5;
+
+  &__tabs {
+    display: flex;
+    background: #fff;
+    padding: 16rpx 24rpx;
+    gap: 16rpx;
+  }
+
+  &__tab {
+    flex: 1;
+    text-align: center;
+    padding: 16rpx 0;
+    border-radius: 999rpx;
+    font-size: 28rpx;
+    color: #8C8C8C;
+    background: #F5F5F5;
+
+    &--active {
+      background: #FF8A5B;
+      color: #fff;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 80rpx 0;
+    color: #8C8C8C;
+    font-size: 28rpx;
+  }
+
+  &__body {
+    padding: 24rpx;
+  }
+
+  &__stats {
+    display: flex;
+    background: linear-gradient(135deg, #FF8A5B 0%, #FFAB87 100%);
+    border-radius: 16rpx;
+    padding: 32rpx;
+    margin-bottom: 24rpx;
+  }
+
+  &__stat {
+    flex: 1;
+    text-align: center;
+  }
+
+  &__stat-num {
+    font-size: 48rpx;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+  }
+
+  &__stat-label {
+    font-size: 24rpx;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  &__card {
+    background: #fff;
+    border-radius: 16rpx;
+    padding: 28rpx;
+    margin-bottom: 24rpx;
+  }
+
+  &__card-title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 20rpx;
+    display: block;
+  }
+
+  &__keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12rpx;
+  }
+
+  &__keyword {
+    padding: 8rpx 24rpx;
+    background: rgba(255, 138, 91, 0.1);
+    border-radius: 999rpx;
+    font-size: 26rpx;
+    color: #FF8A5B;
+  }
+
+  &__highlight {
+    display: flex;
+    padding: 12rpx 0;
+  }
+
+  &__highlight-dot {
+    color: #FF8A5B;
+    margin-right: 12rpx;
+    font-size: 28rpx;
+  }
+
+  &__highlight-text {
+    font-size: 28rpx;
+    color: #262626;
+    line-height: 1.6;
+  }
+
+  &__emotion-row {
+    display: flex;
+    align-items: center;
+    padding: 12rpx 0;
+  }
+
+  &__emotion-name {
+    width: 100rpx;
+    font-size: 26rpx;
+    color: #8C8C8C;
+  }
+
+  &__emotion-bar {
+    flex: 1;
+    height: 16rpx;
+    background: #F5F5F5;
+    border-radius: 8rpx;
+    margin: 0 16rpx;
+    overflow: hidden;
+  }
+
+  &__emotion-fill {
+    height: 100%;
+    background: #FF8A5B;
+    border-radius: 8rpx;
+  }
+
+  &__emotion-percent {
+    width: 80rpx;
+    font-size: 24rpx;
+    color: #8C8C8C;
+    text-align: right;
+  }
+}
