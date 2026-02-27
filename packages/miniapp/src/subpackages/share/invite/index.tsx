@@ -1,15 +1,33 @@
+import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import NavBar from '@/components/NavBar'
+import { shareService, type IInviteCode } from '@/services/share.service'
 import './index.scss'
 
 export default function InvitePage() {
+  const [inviteCode, setInviteCode] = useState<IInviteCode | null>(null)
+
+  useEffect(() => {
+    loadInviteCode()
+  }, [])
+
+  const loadInviteCode = async () => {
+    try {
+      const res = await shareService.getInviteCode()
+      setInviteCode(res.data)
+    } catch {
+      // ignore
+    }
+  }
+
   const handleShareToFriend = () => {
     Taro.showToast({ title: '请使用右上角分享', icon: 'none' })
   }
 
   const handleCopyLink = () => {
-    Taro.setClipboardData({ data: 'https://lifechain.com/invite/mock-code' })
+    const code = inviteCode?.code || 'LIFE2026ABC'
+    Taro.setClipboardData({ data: `https://lifechain.com/invite/${code}` })
     Taro.showToast({ title: '链接已复制', icon: 'success' })
   }
 

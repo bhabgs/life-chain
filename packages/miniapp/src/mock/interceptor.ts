@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { matchHandler } from './handlers'
+import { matchHandler } from './router'
 
 type TaroRequestParams = Parameters<typeof Taro.request>[0]
 type TaroRequestResult = ReturnType<typeof Taro.request>
@@ -19,8 +19,8 @@ export function interceptTaroRequest() {
   Taro.request = async function mockRequest(params: TaroRequestParams): TaroRequestResult {
     const { url = '', method = 'GET', data } = params
 
-    // 提取路径部分（去掉 baseURL）
-    const pathname = url.replace(/^https?:\/\/[^/]+/, '').replace(/^\/api\/v1/, '')
+    // 提取路径部分（去掉 baseURL 和 query 参数）
+    const pathname = url.replace(/^https?:\/\/[^/]+/, '').replace(/^\/api\/v1/, '').split('?')[0]
 
     const handler = matchHandler(method as string, pathname)
 

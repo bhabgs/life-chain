@@ -5,6 +5,7 @@ import type { IMemory } from '@lifechain/shared'
 import { formatDate, truncateText } from '@lifechain/shared'
 import NavBar from '@/components/NavBar'
 import { memoryService } from '@/services/memory.service'
+import { shareService } from '@/services/share.service'
 import './index.scss'
 
 export default function ShareCardPage() {
@@ -19,7 +20,7 @@ export default function ShareCardPage() {
   const loadMemories = async () => {
     try {
       const res = await memoryService.getList({ page: 1, pageSize: 20 })
-      setMemories((res.data as { list: IMemory[] }).list || [])
+      setMemories((res.data as { items: IMemory[] }).items || [])
     } catch {
       // ignore
     }
@@ -27,14 +28,18 @@ export default function ShareCardPage() {
 
   const selectedMemory = memories.find((m) => m.id === selectedId)
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!selectedId) {
       Taro.showToast({ title: '请先选择一条记忆', icon: 'none' })
       return
     }
-    // 模拟卡片生成
-    setCardGenerated(true)
-    Taro.showToast({ title: '卡片生成成功', icon: 'success' })
+    try {
+      await shareService.generateCard(selectedId)
+      setCardGenerated(true)
+      Taro.showToast({ title: '卡片生成成功', icon: 'success' })
+    } catch {
+      Taro.showToast({ title: '生成失败', icon: 'none' })
+    }
   }
 
   const handleSaveToAlbum = () => {

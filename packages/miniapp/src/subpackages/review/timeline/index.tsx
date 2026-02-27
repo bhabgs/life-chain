@@ -3,8 +3,8 @@ import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import NavBar from '@/components/NavBar'
 import TimelineItem from '@/components/TimelineItem'
-import apiClient from '@/services/api-client'
-import type { ITimelineGroup } from '@/mock/data/review'
+import { reviewService } from '@/services/review.service'
+import type { ITimelineGroup } from '@/services/review.service'
 import './index.scss'
 
 export default function TimelinePage() {
@@ -17,7 +17,7 @@ export default function TimelinePage() {
 
   const loadTimeline = async () => {
     try {
-      const res = await apiClient.get<ITimelineGroup[]>('/review/timeline')
+      const res = await reviewService.getTimeline()
       setTimeline(res.data)
     } catch {
       // ignore

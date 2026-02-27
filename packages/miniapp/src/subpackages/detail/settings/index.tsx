@@ -1,17 +1,9 @@
 import { View, Text, Switch } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import NavBar from '@/components/NavBar'
+import { settingsService, type IUserSettings } from '@/services/settings.service'
 import './index.scss'
-
-interface ISettingItem {
-  key: string
-  icon: string
-  label: string
-  type: 'switch' | 'arrow' | 'text'
-  value?: string
-  switchValue?: boolean
-}
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
@@ -23,9 +15,42 @@ export default function SettingsPage() {
     wifiOnly: true,
   })
 
-  const handleSwitchChange = (key: string, value: boolean) => {
+  useEffect(() => {
+    loadSettings()
+  }, [])
+
+  const loadSettings = async () => {
+    try {
+      const res = await settingsService.get()
+      const s = res.data
+      setSettings({
+        notifyMemory: s.notifications.newMemory,
+        notifyChat: s.notifications.systemNotice,
+        notifyReview: s.notifications.weeklyReport,
+        privacyDefault: s.privacy.defaultLevel === 1 ? 'private' : s.privacy.defaultLevel === 2 ? 'family' : 'public',
+        autoSync: true,
+        wifiOnly: true,
+      })
+    } catch {
+      // 加载失败使用默认值
+    }
+  }
+
+  const handleSwitchChange = async (key: string, value: boolean) => {
     setSettings(prev => ({ ...prev, [key]: value }))
-    Taro.showToast({ title: '设置已更新', icon: 'success' })
+    try {
+      await settingsService.update({
+        notifications: {
+          newMemory: key === 'notifyMemory' ? value : settings.notifyMemory,
+          dailyReminder: true,
+          weeklyReport: key === 'notifyReview' ? value : settings.notifyReview,
+          systemNotice: key === 'notifyChat' ? value : settings.notifyChat,
+        },
+      } as Partial<IUserSettings>)
+      Taro.showToast({ title: '设置已更新', icon: 'success' })
+    } catch {
+      Taro.showToast({ title: '保存失败', icon: 'none' })
+    }
   }
 
   const handlePrivacyChange = () => {

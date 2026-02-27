@@ -3,6 +3,7 @@ import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import NavBar from '@/components/NavBar'
 import { memoryService } from '@/services/memory.service'
+import { uploadService } from '@/services/upload.service'
 import './index.scss'
 
 export default function VoiceCapturePage() {
@@ -37,8 +38,12 @@ export default function VoiceCapturePage() {
       clearInterval(timerRef.current)
       timerRef.current = null
     }
-    // 模拟转文字
-    setTranscription('这是一段语音转文字的内容。在实际应用中，这里会显示语音识别后的文本内容。')
+    // 调用语音转文字服务
+    uploadService.transcribeVoice('mock-voice-file.mp3').then((res) => {
+      setTranscription(res.data.text)
+    }).catch(() => {
+      setTranscription('语音识别失败，请重试')
+    })
   }
 
   const handleSave = async () => {

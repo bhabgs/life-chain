@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import NavBar from '@/components/NavBar'
-import apiClient from '@/services/api-client'
-import type { IStageSummary } from '@/mock/data/review'
+import { reviewService } from '@/services/review.service'
+import type { IStageSummary } from '@/services/review.service'
 import './index.scss'
 
 export default function SummaryPage() {
@@ -17,7 +17,7 @@ export default function SummaryPage() {
   const loadSummary = async () => {
     setLoading(true)
     try {
-      const res = await apiClient.get<IStageSummary>('/review/summary', { period: activePeriod })
+      const res = await reviewService.getSummary(activePeriod)
       setSummary(res.data)
     } catch {
       // ignore

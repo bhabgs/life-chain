@@ -23,7 +23,7 @@ export default function IndexPage() {
         memoryService.getList({ page: 1, pageSize: 5 }),
         chatService.getSessions(),
       ])
-      setRecentMemories((memRes.data as { list: IMemory[] }).list || [])
+      setRecentMemories((memRes.data as { items: IMemory[] }).items || [])
 
       // 获取最新会话的最后一条消息
       const sessions = sessionRes.data

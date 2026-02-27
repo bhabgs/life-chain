@@ -10,6 +10,10 @@ export const chatService = {
     return apiClient.get(`/chat/sessions/${sessionId}/messages`)
   },
 
+  createSession(title?: string, mode?: string): Promise<IApiResponse<IChatSession>> {
+    return apiClient.post('/chat/sessions', { title, mode })
+  },
+
   sendMessage(
     sessionId: string,
     content: string

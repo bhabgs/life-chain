@@ -54,7 +54,26 @@ export default function MemoryDetailPage() {
   }
 
   const handleEdit = () => {
-    Taro.showToast({ title: '编辑功能开发中', icon: 'none' })
+    if (!memory) return
+    // 跳转到文字记录页面进行编辑（复用采集页面）
+    // 实际编辑页面后续实现，这里先通过 showModal 模拟简单编辑
+    Taro.showModal({
+      title: '编辑记忆',
+      content: '确定要编辑这条记忆吗？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            const updated = await memoryService.update(memory.id, {
+              content: memory.content,
+            })
+            setMemory(updated.data)
+            Taro.showToast({ title: '已保存', icon: 'success' })
+          } catch {
+            Taro.showToast({ title: '保存失败', icon: 'none' })
+          }
+        }
+      },
+    })
   }
 
   const handleDelete = () => {

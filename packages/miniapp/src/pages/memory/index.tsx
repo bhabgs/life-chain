@@ -29,8 +29,8 @@ export default function MemoryPage() {
           keyword: keyword || undefined,
           type: (activeFilter as IMemory['type']) || undefined,
         })
-        const data = res.data as { list: IMemory[]; total: number }
-        setMemories(reset ? data.list : [...memories, ...data.list])
+        const data = res.data as { items: IMemory[]; total: number }
+        setMemories(reset ? data.items : [...memories, ...data.items])
         setTotal(data.total)
         setPage(p)
       } catch {

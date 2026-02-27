@@ -3,6 +3,7 @@ import { View, Text, Image, Textarea } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import NavBar from '@/components/NavBar'
 import { memoryService } from '@/services/memory.service'
+import { uploadService } from '@/services/upload.service'
 import './index.scss'
 
 export default function PhotoCapturePage() {
@@ -28,12 +29,14 @@ export default function PhotoCapturePage() {
     }
     setSaving(true)
     try {
+      // 先上传图片获取 URL
+      const uploadRes = await uploadService.uploadImage(imagePath)
       await memoryService.create({
         type: 'image',
         title: '图片记忆',
         content: description || '一张记忆的照片',
         emotion: 'happy',
-        mediaUrls: [imagePath],
+        mediaUrls: [uploadRes.data.url],
       })
       Taro.showToast({ title: '记录成功', icon: 'success' })
       setTimeout(() => Taro.navigateBack(), 1500)

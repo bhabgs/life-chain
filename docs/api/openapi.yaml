@@ -25,6 +25,16 @@ tags:
     description: 系统管理
   - name: Roles
     description: 角色权限
+  - name: Chat
+    description: 对话系统（小程序端）
+  - name: UserProfile
+    description: 用户个人中心（小程序端）
+  - name: Review
+    description: 人生回顾（小程序端）
+  - name: Upload
+    description: 文件上传（小程序端）
+  - name: Share
+    description: 分享与邀请（小程序端）
 
 components:
   securitySchemes:
@@ -441,6 +451,137 @@ components:
         createdAt:
           type: string
           format: date-time
+
+    ChatSession:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        mode:
+          type: string
+          enum: [normal, night, listen]
+        status:
+          type: string
+          enum: [active, archived]
+        messageCount:
+          type: integer
+        lastMessageAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionId:
+          type: string
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        emotion:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    UserSettings:
+      type: object
+      properties:
+        notifications:
+          type: object
+          properties:
+            newMemory:
+              type: boolean
+            dailyReminder:
+              type: boolean
+            weeklyReport:
+              type: boolean
+            systemNotice:
+              type: boolean
+        privacy:
+          type: object
+          properties:
+            defaultLevel:
+              type: integer
+              enum: [1, 2, 3]
+            allowSearch:
+              type: boolean
+        theme:
+          type: string
+          enum: [light, dark, system]
+        language:
+          type: string
+        fontSize:
+          type: string
+          enum: [small, medium, large]
+
+    TimelineGroup:
+      type: object
+      properties:
+        month:
+          type: string
+          description: "月份，如 '2026-02'"
+        label:
+          type: string
+          description: "显示标签，如 '2026年2月'"
+        count:
+          type: integer
+        highlights:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              date:
+                type: string
+              type:
+                type: string
+              isImportant:
+                type: boolean
+
+    StageSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        period:
+          type: string
+        periodLabel:
+          type: string
+        memoryCount:
+          type: integer
+        chatCount:
+          type: integer
+        emotionDistribution:
+          type: object
+          additionalProperties:
+            type: number
+        keywords:
+          type: array
+          items:
+            type: string
+        highlights:
+          type: array
+          items:
+            type: string
 
     LoginRequest:
       type: object
@@ -1316,3 +1457,495 @@ paths:
       responses:
         '200':
           description: 删除成功
+
+  # ============ Auth (小程序端补充) ============
+  /auth/send-code:
+    post:
+      tags: [Auth]
+      summary: 发送手机验证码
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone]
+              properties:
+                phone:
+                  type: string
+                  description: 手机号码
+      responses:
+        '200':
+          description: 验证码发送成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+
+  # ============ Memories (小程序端补充) ============
+  /memories/{id}/update:
+    put:
+      tags: [Memories]
+      summary: 编辑记忆
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                emotion:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Memory'
+        '404':
+          description: 记忆不存在
+
+  # ============ Chat ============
+  /chat/sessions:
+    get:
+      tags: [Chat]
+      summary: 获取会话列表
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ChatSession'
+    post:
+      tags: [Chat]
+      summary: 创建新会话
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                mode:
+                  type: string
+                  enum: [normal, night, listen]
+      responses:
+        '200':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChatSession'
+
+  /chat/sessions/{id}/messages:
+    get:
+      tags: [Chat]
+      summary: 获取会话消息列表
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 会话ID
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ChatMessage'
+    post:
+      tags: [Chat]
+      summary: 发送消息（返回用户消息和AI回复）
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: 会话ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: 消息发送成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          userMessage:
+                            $ref: '#/components/schemas/ChatMessage'
+                          aiReply:
+                            $ref: '#/components/schemas/ChatMessage'
+
+  # ============ UserProfile ============
+  /user/profile:
+    get:
+      tags: [UserProfile]
+      summary: 获取当前用户信息
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+    put:
+      tags: [UserProfile]
+      summary: 更新当前用户信息
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                avatar:
+                  type: string
+                birthDate:
+                  type: string
+                gender:
+                  type: string
+      responses:
+        '200':
+          description: 更新成功
+
+  /user/settings:
+    get:
+      tags: [UserProfile]
+      summary: 获取用户设置
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/UserSettings'
+    put:
+      tags: [UserProfile]
+      summary: 保存用户设置
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSettings'
+      responses:
+        '200':
+          description: 保存成功
+
+  # ============ Review ============
+  /review/timeline:
+    get:
+      tags: [Review]
+      summary: 获取时间轴数据
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TimelineGroup'
+
+  /review/summary:
+    get:
+      tags: [Review]
+      summary: 获取阶段总结
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [30d, 90d]
+            default: 30d
+          description: 总结周期
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/StageSummary'
+
+  # ============ Upload ============
+  /upload/image:
+    post:
+      tags: [Upload]
+      summary: 上传图片
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [filePath]
+              properties:
+                filePath:
+                  type: string
+                  description: 小程序临时文件路径
+      responses:
+        '200':
+          description: 上传成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                          filename:
+                            type: string
+
+  /upload/voice-transcribe:
+    post:
+      tags: [Upload]
+      summary: 语音转文字
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [filePath]
+              properties:
+                filePath:
+                  type: string
+                  description: 语音文件路径
+      responses:
+        '200':
+          description: 转写成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          text:
+                            type: string
+                          duration:
+                            type: number
+                          confidence:
+                            type: number
+
+  # ============ Share ============
+  /share/generate-card:
+    post:
+      tags: [Share]
+      summary: 生成记忆分享卡片
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [memoryId]
+              properties:
+                memoryId:
+                  type: string
+                style:
+                  type: string
+      responses:
+        '200':
+          description: 生成成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          cardUrl:
+                            type: string
+                          memoryId:
+                            type: string
+                          style:
+                            type: string
+
+  /share/invite-code:
+    get:
+      tags: [Share]
+      summary: 获取邀请码
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                          expiredAt:
+                            type: string
+                            format: date-time
+                          maxUses:
+                            type: integer
+                          usedCount:
+                            type: integer
+
+  /share/verify-invite:
+    post:
+      tags: [Share]
+      summary: 验证邀请码
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+      responses:
+        '200':
+          description: 验证结果
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          valid:
+                            type: boolean
+                          inviterNickname:
+                            type: string
+                            nullable: true
+                          message:
+                            type: string

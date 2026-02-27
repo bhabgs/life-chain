@@ -17,4 +17,8 @@ export const authService = {
   refreshToken(refreshToken: string): Promise<IApiResponse<ILoginResponse>> {
     return apiClient.post('/auth/refresh', { refreshToken })
   },
+
+  sendCode(phone: string): Promise<IApiResponse<{ message: string }>> {
+    return apiClient.post('/auth/send-code', { phone })
+  },
 }

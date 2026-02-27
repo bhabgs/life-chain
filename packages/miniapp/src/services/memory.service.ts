@@ -21,7 +21,25 @@ export const memoryService = {
     return apiClient.post('/memories', data as Record<string, unknown>)
   },
 
+  update(id: string, data: Partial<{
+    title: string
+    content: string
+    emotion: string
+    tags: string[]
+  }>): Promise<IApiResponse<IMemory>> {
+    return apiClient.put(`/memories/${id}`, data as Record<string, unknown>)
+  },
+
   delete(id: string): Promise<IApiResponse<null>> {
     return apiClient.delete(`/memories/${id}`)
+  },
+
+  getStats(): Promise<IApiResponse<{
+    total: number
+    byType: Record<string, number>
+    byStage: Record<string, number>
+    byEmotion: Record<string, number>
+  }>> {
+    return apiClient.get('/memories/stats')
   },
 }
